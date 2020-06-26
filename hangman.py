@@ -54,6 +54,28 @@ def choose_category():
     return 0
 
 def play(file_name):
+    file_to_open = update_path(file_name)
+    f = open(file_to_open, 'r')
+
+    possible_words = f.readlines()
+    word_to_guess = random.choice(possible_words)
+    word_guessed = ""
+
+    for i in range(len(word_to_guess)):
+        if word_to_guess[i] == ' ':
+            word_guessed += '  '
+        else:
+            word_guessed += '_ '
+
+    print(word_guessed)
+    user_guess = input("Guess a letter: ")
+
+    if user_guess in word_to_guess:
+        for i in range(len(word_to_guess)):
+            if word_to_guess[i] == user_guess:
+                word_guessed += user_guess
+            else:
+                word_guessed += '_ '
     return 0
     
 def update_path(file_name):
