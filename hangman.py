@@ -30,6 +30,27 @@ def start_game():
     return 0
 
 def choose_category():
+    print("Choose a category: \n")
+    print("C - Countries")
+    print("M - Movies")
+    print("P - Pokemon")
+    print("S - Sports")
+    print("T - Technology")
+
+    choose_category = input("\n= ").upper()
+
+    if choose_category == 'C':
+        play("countries.txt")
+    elif choose_category == 'M':
+        play("movies.txt")
+    elif choose_category == 'P':
+        play("pokemon.txt")
+    elif choose_category == 'S':
+        play("sports.txt")
+    elif choose_category == 'T':
+        play("technology.txt")
+    else:
+        print("\nUnknown user input\n")
     return 0
 
 def play(file_name):
