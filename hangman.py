@@ -25,6 +25,8 @@ def initialize():
     return 0
 
 def start_game():
+    print("\nWelcome!\n")
+    choose_category()
     return 0
 
 def choose_category():
