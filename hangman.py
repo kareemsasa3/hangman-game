@@ -79,4 +79,5 @@ def play(file_name):
     return 0
     
 def update_path(file_name):
-    return 0
+    file_to_open = data_folder / file_name
+    return file_to_open
