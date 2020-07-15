@@ -1,83 +1,115 @@
 from pathlib import Path
 import random
+import os
+from os import system
 
-data_folder = Path("categories/")
 
-def initialize():
-    play_game = input("\nWould you like to play Hangman? (Y or N)\n")
+data_folder = "./categories/"
 
-    if play_game in ('Y', 'y'):
-        start_game()
-    elif play_game in ('N', 'n'):
-        exit_game = input("\nWould you like to exit? (Y or N)\n")
 
-        if exit_game in ('Y', 'y'):
-            print("\nGoodbye\n")
+def initialize_program():
+    system('clear')
+    print("----------WELCOME----------")
+    play_game = input("PLAY HANGMAN? (Y or N): ").upper()
+
+    if play_game == 'Y':
+        choose_category()
+    elif play_game == 'N':
+        exit_game = input("\nEXIT? (Y or N): ")
+
+        if exit_game == 'Y':
+            print("\n----------GOODBYE----------")
             exit
-        elif exit_game in ('N', 'n'):
-            initialize()
         else:
-            print("\nUnknown user input\n")
-            initialize()
+            initialize_program()
     else:
-        print("\nUnknown user input\n")
-        initialize()
+        initialize_program()
     return 0
 
-def start_game():
-    print("\nWelcome!\n")
-    choose_category()
-    return 0
 
 def choose_category():
-    print("Choose a category: \n")
-    print("C - Countries")
-    print("M - Movies")
-    print("P - Pokemon")
-    print("S - Sports")
-    print("T - Technology")
+    system('clear')
+    print("-----CHOOSE A CATEGORY:-----")
+    print("C - COUNTRIES")
+    print("M - MOVIES")
+    print("P - POKEMON")
+    print("S - SPORTS")
+    print("T - TECHNOLOGY")
+    print("----------------------------")
+    category = input("= ").upper()
 
-    choose_category = input("\n= ").upper()
-
-    if choose_category == 'C':
-        play("countries.txt")
-    elif choose_category == 'M':
-        play("movies.txt")
-    elif choose_category == 'P':
-        play("pokemon.txt")
-    elif choose_category == 'S':
-        play("sports.txt")
-    elif choose_category == 'T':
-        play("technology.txt")
+    if category == 'C':
+        setup_game("countries.TXT")
+    elif category == 'M':
+        setup_game("movies.TXT")
+    elif category == 'P':
+        setup_game("pokemon.TXT")
+    elif category == 'S':
+        setup_game("sports.TXT")
+    elif category == 'T':
+        setup_game("technology.TXT")
     else:
-        print("\nUnknown user input\n")
+        print("\nBAD USER INPUT")
+        choose_category()        
     return 0
 
-def play(file_name):
+
+def setup_game(file_name):
+    system('clear')
+    print("CATEGORY: " + os.path.splitext(file_name)[0].upper())
     file_to_open = update_path(file_name)
     f = open(file_to_open, 'r')
-
     possible_words = f.readlines()
     word_to_guess = random.choice(possible_words)
-    word_guessed = ""
+    word_guessed = setup_blank_string(word_to_guess)
+    execute_guess(word_to_guess, word_guessed)
+    return 0
 
-    for i in range(len(word_to_guess)):
+
+def setup_blank_string(word_to_guess):
+    print("\nWORD TO GUESS: " + word_to_guess)
+    word_guessed = ""
+    
+    for i in range(len(word_to_guess)-1):
         if word_to_guess[i] == ' ':
             word_guessed += '  '
         else:
             word_guessed += '_ '
+    
+    print("\n" + word_guessed)
+    return word_guessed
 
-    print(word_guessed)
-    user_guess = input("Guess a letter: ")
+
+def execute_guess(word_to_guess, word_guessed):
+    guesses_remaining = 5
+    location_of_guess = []
+    print("\n# OF INCORRECT GUESSES REMAINING: " + str(guesses_remaining))
+    user_guess = input("\nGUESS A LETTER: ")[0].lower()
 
     if user_guess in word_to_guess:
-        for i in range(len(word_to_guess)):
+        print("\nLETTER '" + user_guess.upper() + "' FOUND\n")        
+        for i in range(len(word_to_guess)-1):
             if word_to_guess[i] == user_guess:
-                word_guessed += user_guess
-            else:
-                word_guessed += '_ '
-    return 0
-    
+                location_of_guess.append(str(word_to_guess.index(user_guess)))
+                word_guessed = update_string(user_guess, word_guessed, location_of_guess)
+
+    else:
+        print("\nLETTER '" + user_guess.upper() + "' NOT FOUND\n")
+        guesses_remaining = guesses_remaining - 1
+
+    #execute_guess()
+
+        
+def update_string(user_guess, word_guessed, location_of_guess):
+    print("LOCATION OF GUESSES: " + str(location_of_guess))
+    for i in range(len(location_of_guess)-1):
+        if location_of_guess[i] == i:
+            word_guessed = word_guessed[:i] + user_guess + s[i+1:]
+    print(word_guessed)
+
+
 def update_path(file_name):
-    file_to_open = data_folder / file_name
-    return file_to_open
+    return data_folder + file_name
+
+
+initialize_program()
